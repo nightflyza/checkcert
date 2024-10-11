@@ -5,15 +5,26 @@ from datetime import datetime
 
 def certCheck(domain):
     try:
+        daysAlert = 7
         context = ssl.create_default_context()
         conn = context.wrap_socket(socket.socket(socket.AF_INET), server_hostname=domain)
         conn.settimeout(5)
         conn.connect((domain, 443))
         cert = conn.getpeercert()
         issuer = dict(x[0] for x in cert['issuer'])
-        issued_by = issuer.get('organizationName', 'Unknown')
-        not_after = datetime.strptime(cert['notAfter'], '%b %d %H:%M:%S %Y %Z')
-        print(f"{domain} => Issuer: {issued_by}, Valid until: {not_after}")
+        issuedBy = issuer.get('organizationName', 'Unknown')
+        notAfter = datetime.strptime(cert['notAfter'], '%b %d %H:%M:%S %Y %Z')
+        currentDate = datetime.now()
+        daysRemaining = (notAfter - currentDate).days
+
+        if daysRemaining < 0:
+            certState = 'EXPIRED'
+        elif daysRemaining <= daysAlert:
+            certState = 'SOON'
+        else:
+            certState = 'OK'
+
+        print(f"{domain} => Issuer: {issuedBy}, Valid until: {notAfter} State: [{certState}]")
     except Exception as e:
         print(f"{domain} => Error: {e}")
 

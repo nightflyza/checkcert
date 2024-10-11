@@ -44,6 +44,6 @@ For each domain, the script will display:
 something like this
 ```bash
 $ python checkcert.py google.com github.com
-google.com => Issuer: Google Trust Services, Valid until: 2024-12-09 08:55:47
-github.com => Issuer: Sectigo Limited, Valid until: 2025-03-07 23:59:59
+google.com => Issuer: Google Trust Services, Valid until: 2024-12-09 08:55:47  State: [OK]
+github.com => Issuer: Sectigo Limited, Valid until: 2025-03-07 23:59:59  State: [OK]
 ```
